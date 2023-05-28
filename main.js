@@ -5,6 +5,41 @@ const FULL_HEART = '♥'
 // Your JavaScript code goes here!
 
 
+// Select all the like buttons
+const likeButtons = document.querySelectorAll('.like');
+
+// Attach click event listener to each like button
+likeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Check if the heart is already liked or not
+    const isLiked = button.classList.contains('activated');
+
+    // Call the server to mimic liking/unliking the post
+    mimicServerCall()
+      .then(() => {
+        // If the server call is successful, toggle the appearance of the heart
+        if (isLiked) {
+          // Unlike the post
+          button.classList.remove('activated');
+          button.querySelector('.like-glyph').innerHTML = EMPTY_HEART;
+        } else {
+          // Like the post
+          button.classList.add('activated');
+          button.querySelector('.like-glyph').innerHTML = FULL_HEART;
+        }
+      })
+      .catch(error => {
+        // If the server call fails, show the error message in the modal
+        const modalMessage = document.getElementById('modal-message');
+        modalMessage.textContent = error;
+        const modal = document.getElementById('modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 3000);
+      });
+  });
+});
 
 
 //------------------------------------------------------------------------------
